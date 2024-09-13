@@ -31,6 +31,10 @@ export default function RunwayTemp() {
         }
 
         fetchData();
+
+        const intervalId = setInterval(fetchData, 60000); // Fetch every 60 seconds
+
+        return () => clearInterval(intervalId);
     }, []);
 
     const getTemperatureBySiteId = (siteId) => {

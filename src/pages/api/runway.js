@@ -1,6 +1,13 @@
 import fetch from 'node-fetch';
 
+let accessToken = null;
+let tokenExpirationTime = null;
+
 async function getAccessToken() {
+    if (accessToken && tokenExpirationTime && new Date() < tokenExpirationTime) {
+        return accessToken;
+    }
+
     const clientId = process.env.CLIENT_ID;
     const clientSecret = process.env.CLIENT_SECRET;
     const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
@@ -22,7 +29,10 @@ async function getAccessToken() {
     }
 
     const data = await response.json();
-    return data.access_token;
+    accessToken = data.access_token;
+    tokenExpirationTime = new Date(new Date().getTime() + data.expires_in * 3000); // seconds, current value = 50 minutes
+
+    return accessToken;
 }
 
 export default async function handler(req, res) {
