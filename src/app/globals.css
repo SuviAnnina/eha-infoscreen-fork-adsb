@@ -2,22 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: 'SquareFont';
+  src: url('/fonts/Square.ttf') format('truetype');
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background-gradient: linear-gradient(180deg, #6f775d, #464038);
+  --foreground: #171717; 
+}
+
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background-gradient);
+  font-family: 'SquareFont', Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 @layer utilities {
