@@ -1,0 +1,31 @@
+.custom-tooltip {
+    font-size: 12px;
+    padding: 1px 3px;
+    color: #000000;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 5px;
+}
+
+.leaflet-popup-content {
+    margin: 0;
+    padding: 0;
+    white-space: normal;
+}
+
+.leaflet-popup-tip {
+    width: 10px;
+    height: 10px;
+}
+
+.leaflet-popup-close-button {
+    top: 2px;
+    right: 2px;
+    font-size: 14px;
+}
+
+.popup-h4 {
+    padding: 3px;
+    margin: 0;
+}
