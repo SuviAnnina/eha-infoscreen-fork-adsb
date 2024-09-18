@@ -31,6 +31,8 @@ export default function Home() {
 
   useEffect(() => {
     fetchAdsbData();
+    const intervalADSB = setInterval(fetchAdsbData, 1000);
+    return () => clearInterval(intervalADSB);
   }, []);
 
   return (
