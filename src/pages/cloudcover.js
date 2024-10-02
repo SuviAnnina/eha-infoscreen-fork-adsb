@@ -13,7 +13,7 @@ export default async function CloudCover() {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
+
         const xmlText = await response.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
@@ -27,12 +27,31 @@ export default async function CloudCover() {
             // Jaa rivinvaihtojen mukaan ja ota ensimmäinen arvo
             const cloudCoverageArray = cloudCoverageRaw.split('\n');
             const totalCloudCoverage = cloudCoverageArray[0].split(' ')[10]; // Oletetaan, että pilvisyysarvo on toisena
+            const windDirection = cloudCoverageArray[0].split(' ')[5]; //WINDDIRECTION, Tuulensuunta
 
             // Tulostetaan pilvisyysarvo konsoliin
-            console.log(`Total Cloud Coverage: ${totalCloudCoverage}`);
+            console.log(`Total Cloud Coverage: ${totalCloudCoverage} \n
+                         WindDirection: ${windDirection}`);
         } else {
             console.warn('Pilvisyysarvoja ei löytynyt.');
         }
+
+
+        // Hakee <gmlcov:positions> elementit aikaleimojen löytämiseksi
+        const timePositionElements = xmlDoc.getElementsByTagName('gmlcov:positions');
+        if (timePositionElements.length > 0) {
+            const timePosition = timePositionElements[0].textContent.trim();
+            const positionsArray = timePosition.split(/\s+/); // Jaa välilyöntien perusteella
+            if (positionsArray.length >= 3) {
+                const firstTimestamp = positionsArray[2]; // Ota ensimmäinen aikaleima (kolmas arvo)
+                console.log('First Timestamp:', firstTimestamp);
+            } else {
+                console.log('Aikaleima ei löytynyt.');
+            }
+        } else {
+            console.log('Time Position - Elementtiä ei löytynyt.');
+        }
+        
 
     } catch (error) {
         console.error('Virhe haettaessa XML-tiedostoa:', error);
