@@ -3,13 +3,17 @@ export default async function CloudCover() {
     
     try {
         const response = await fetch(url, {
-            method: 'POST', // Käytetään POST-metodia
+            method: 'GET', // Käytetään POST-metodia
             headers: {
-                'Content-Type': 'application/xml', // Content-Type XML:lle
                 'Accept': 'application/xml',       // Voit lisätä muita tarvittavia otsikoita tähän
             }
         });
 
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
         const xmlText = await response.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "application/xml");

@@ -48,11 +48,11 @@ export default function Home() {
 */
 
   useEffect(() => {
-    fetchAdsbData();
+    //fetchAdsbData();
     CloudCover();
     //fetchCloudCoverData();
-    const intervalADSB = setInterval(fetchAdsbData, 1000);
-    return () => clearInterval(intervalADSB);
+    //const intervalADSB = setInterval(fetchAdsbData, 1000);
+    //return () => clearInterval(intervalADSB);
   }, []);
 
   return (
