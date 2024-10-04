@@ -8,7 +8,9 @@ export default function Home() {
 
   async function fetchNotam() {
     try {
-      const response = await fetch('http://localhost:3000/api/notam');
+      const response = await fetch('http://localhost:3000/api/notam', {
+        cache: 'no-store',  // Disable caching
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch NOTAM data');
       }
@@ -32,13 +34,13 @@ export default function Home() {
     const data = await fetchNotam();
     if (data) {
       setNotam(data);
-      setError(null); 
+      setError(null);
     }
   };
 
   useEffect(() => {
     updateNotam();
-    const intervalId = setInterval(updateNotam, 3600000);
+    const intervalId = setInterval(updateNotam, 3600000);  // One hour interval
     return () => clearInterval(intervalId);
   }, []);
 
@@ -56,6 +58,7 @@ export default function Home() {
     </div>
   );
 }
+
 
 
 
