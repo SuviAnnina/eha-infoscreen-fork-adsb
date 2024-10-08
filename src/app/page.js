@@ -19,7 +19,11 @@ export default function Home() {
       const result = await response.json();
 
       if (response.ok && result.length > 0) {
-        setFlights(result);
+
+        const uniqueFlights = result.filter((flight, index, self) =>
+          index === self.findIndex((f) => f.hex === flight.hex));
+
+        setFlights(uniqueFlights);
         setAdsbTime(result[0].tim.slice(0, 8))
       } else {
         console.warn('ADS-B data response empty/not ok');

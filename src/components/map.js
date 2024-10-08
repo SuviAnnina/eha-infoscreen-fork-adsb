@@ -18,7 +18,7 @@ function ResetButton({ initialLocation, initialZoom }) {
             style={{
                 position: 'absolute',
                 right: '5px',
-                bottom: '20px',
+                bottom: '30px',
                 zIndex: 1000,
                 padding: '5px 10px',
                 backgroundColor: '#fac807',
@@ -39,7 +39,7 @@ function ToggleButton({ toggleMapStyle }) {
             style={{
                 position: 'absolute',
                 right: '5px',
-                bottom: '50px',
+                bottom: '60px',
                 zIndex: 1000,
                 padding: '5px 10px',
                 backgroundColor: '#fac807',
@@ -122,11 +122,16 @@ function Map({ flights, adsbTime }) {
                         </Tooltip>
                     </Marker>
 
-                    {flights.map((flight) => {
+                    {flights.map((flight, index) => {
+                        const isValidFlight = flight.lat != null && flight.lon != null && flight.fli;
+
+                        if (!isValidFlight) {
+                            console.log("invalid flight data:", flight)
+                            return null;
+                        }
+
                         const rotation = flight.trk;
                         return (
-
-
                             <Marker
                                 key={flight.hex}
                                 position={[flight.lat, flight.lon]}
