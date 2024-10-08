@@ -13,9 +13,9 @@ function fetchNewData() {
 
 export async function GET() {
   if (fetchNewData()) {
-    const response = await fetch('https://lentopaikat.fi/notam/notam.php?a=EFIV', {
+    const response = await fetch('https://lentopaikat.fi/notam/notam.php?a=EFPR', {
       headers: {
-        'Cache-Control': 'no-cache',  // Disable caching
+        'Cache-Control': 'no-store',
       },
     });
 
@@ -28,8 +28,11 @@ export async function GET() {
     lastFetchTime = Date.now();
   }
 
-  return NextResponse.json({ data: cachedData });
+  return NextResponse.json({ data: cachedData }, {
+    headers: {
+      'Cache-Control': 'no-store',  // Estää palvelimen välimuistin
+    },
+  });
 }
-
 
 

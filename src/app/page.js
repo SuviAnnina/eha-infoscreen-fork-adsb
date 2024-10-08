@@ -9,7 +9,7 @@ export default function Home() {
   async function fetchNotam() {
     try {
       const response = await fetch('http://localhost:3000/api/notam', {
-        cache: 'no-store',  // Disable caching
+        'Cache-Control': 'no-store',
       });
       if (!response.ok) {
         throw new Error('Failed to fetch NOTAM data');
