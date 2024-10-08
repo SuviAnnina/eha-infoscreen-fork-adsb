@@ -90,12 +90,12 @@ function Map({ flights, adsbTime }) {
 
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px' }} >ADSB {adsbTime}</p>
             <div style={{ position: 'relative', height: '80%', width: '80%', borderRadius: '40px', overflow: 'hidden' }}>
-                <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }} >ADSB {adsbTime}</p>
                 <MapContainer
                     center={initial_location}
                     zoom={initial_zoom}
-                    style={{ height: '100%', width: '100%' }}>
+                    style={{ height: '100%', width: '100%', }}>
 
                     {isDarkMode ? (
                         <TileLayer
@@ -122,7 +122,7 @@ function Map({ flights, adsbTime }) {
                         </Tooltip>
                     </Marker>
 
-                    {flights.map((flight, index) => {
+                    {flights.map((flight) => {
                         const isValidFlight = flight.lat != null && flight.lon != null && flight.fli;
 
                         if (!isValidFlight) {
