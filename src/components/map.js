@@ -46,7 +46,7 @@ const rotatedIcon = (iconUrl, rotation, iconSize) => {
     });
 };
 
-function Map({ flights }) {
+function Map({ flights, adsbTime }) {
     const aerodome_location = [60.48075888598088, 26.59665436528449];
     const initial_location = [60.518742, 26.398944];
     const initial_zoom = 7;
@@ -68,6 +68,7 @@ function Map({ flights }) {
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ position: 'relative', height: '80%', width: '80%', borderRadius: '40px', overflow: 'hidden' }}>
+                <p style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }} >ADSB {adsbTime}</p>
                 <MapContainer
                     center={initial_location}
                     zoom={initial_zoom}

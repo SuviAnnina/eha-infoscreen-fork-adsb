@@ -11,6 +11,7 @@ const Map = dynamic(() => import('@/components/map'), {
 export default function Home() {
 
   const [flights, setFlights] = useState([]);
+  const [adsbTime, setAdsbTime] = useState("");
 
   const fetchAdsbData = async () => {
     try {
@@ -19,6 +20,7 @@ export default function Home() {
 
       if (response.ok && result.length > 0) {
         setFlights(result);
+        setAdsbTime(result[0].tim.slice(0, 8))
       } else {
         console.warn('ADS-B data response empty/not ok');
       }
@@ -38,7 +40,7 @@ export default function Home() {
   return (
     <div>
       <RunwayTemp />
-      <Map flights={flights} />
+      <Map flights={flights} adsbTime={adsbTime} />
     </div>
   );
 }
