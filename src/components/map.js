@@ -32,7 +32,26 @@ function ResetButton({ initialLocation, initialZoom }) {
     );
 }
 
-/* Todo: button to swap between dark mode/light mode map layout + icons */
+function ToggleButton({ toggleMapStyle }) {
+    return (
+        <button
+            onClick={toggleMapStyle}
+            style={{
+                position: 'absolute',
+                right: '5px',
+                bottom: '50px',
+                zIndex: 1000,
+                padding: '5px 10px',
+                backgroundColor: '#fac807',
+                color: 'white',
+                border: 'none',
+                borderRadius: '30px',
+                cursor: 'pointer',
+            }}>
+            Change mode
+        </button>
+    );
+}
 
 const rotatedIcon = (iconUrl, rotation, iconSize) => {
     const size = iconSize;
@@ -50,8 +69,8 @@ function Map({ flights, adsbTime }) {
     const aerodome_location = [60.48075888598088, 26.59665436528449];
     const initial_location = [60.518742, 26.398944];
     const initial_zoom = 7;
-
     const [iconSize, setIconSize] = useState(16);
+    const [isDarkMode, setIsDarkMode] = useState(true);
 
     useEffect(() => {
         const handleResize = () => {
@@ -65,6 +84,10 @@ function Map({ flights, adsbTime }) {
         };
     }, []);
 
+    const toggleMapStyle = () => {
+        setIsDarkMode(prevMode => !prevMode);
+    };
+
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ position: 'relative', height: '80%', width: '80%', borderRadius: '40px', overflow: 'hidden' }}>
@@ -73,25 +96,27 @@ function Map({ flights, adsbTime }) {
                     center={initial_location}
                     zoom={initial_zoom}
                     style={{ height: '100%', width: '100%' }}>
-                    <TileLayer
-                        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & CartoDB'
-                    />{/* Dark mode */}
 
-
-                    {/* <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
-                    {/* Light mode */}
+                    {isDarkMode ? (
+                        <TileLayer
+                            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & CartoDB'
+                        />
+                    ) : (
+                        <TileLayer
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        />
+                    )}
 
                     <Marker position={aerodome_location}
-                        icon={rotatedIcon('/svgs/txrunit_yellow.svg', 0, iconSize)}>
+                        icon={rotatedIcon(isDarkMode ? '/svgs/txrunit_yellow.svg' : '/svgs/txrunit_black.svg', 0, iconSize)}>
                         <Tooltip
                             className='custom-tooltip'
                             direction="top"
                             offset={[0, -12]}
                             opacity={1}
-                            permanent={false} // true: name always visible, false: shows while hovered
+                            permanent={true} // true: name always visible, false: shows while hovered
                         >
                             Helsinki East Aerodome
                         </Tooltip>
@@ -101,17 +126,22 @@ function Map({ flights, adsbTime }) {
                         const rotation = flight.trk;
                         return (
 
+
                             <Marker
                                 key={flight.hex}
                                 position={[flight.lat, flight.lon]}
-                                icon={rotatedIcon('/svgs/plane_yellow.svg', rotation, iconSize)}>
+                                icon={rotatedIcon(
+                                    isDarkMode ? '/svgs/plane_yellow.svg' : '/svgs/plane_black.svg',
+                                    rotation,
+                                    iconSize
+                                )}>
 
                                 <Tooltip
                                     className='custom-tooltip'
                                     direction="top"
-                                    offset={[0, -12]}
+                                    offset={[0, -18]}
                                     opacity={1}
-                                    permanent={false} // true: flight number always visible, false: shows while hovered
+                                    permanent={true} // true: flight number always visible, false: shows while hovered
                                 >
                                     {flight.fli}
                                 </Tooltip>
@@ -131,7 +161,7 @@ function Map({ flights, adsbTime }) {
                             </Marker>
                         );
                     })}
-
+                    <ToggleButton toggleMapStyle={toggleMapStyle} />
                     <ResetButton initialLocation={initial_location} initialZoom={initial_zoom} />
                 </MapContainer>
             </div>
