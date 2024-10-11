@@ -67,7 +67,7 @@ const rotatedIcon = (iconUrl, rotation, iconSize) => {
 
 function Map({ flights, adsbTime }) {
     const aerodome_location = [60.48075888598088, 26.59665436528449];
-    const initial_location = [60.518742, 26.398944];
+    const initial_location = [60.410626266897054, 22.867355506576178];
     const initial_zoom = 7;
     const [iconSize, setIconSize] = useState(16);
     const [isDarkMode, setIsDarkMode] = useState(true);
