@@ -1,27 +1,38 @@
 
 
 export default async function CloudCover() {
-    const url = `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::multipointcoverage&place=pyhtää`;
-
+    const urls = [`https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::multipointcoverage&place=pyhtää`,
+                 `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&place=pyhtää`
+    ];
 
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/xml',
+        // Fetch both URLs concurrently
+        const responses = await Promise.all(urls.map(url =>
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/xml',
+                }
+            })
+        ));
+    
+        responses.forEach((response, index) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error on URL ${urls[index]}! Status: ${response.status}`);
             }
         });
     
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-    
-        const xmlText = await response.text();
+        const [forecastText, observationText] = await Promise.all(responses.map(res => res.text()));
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-    
+        const forecastXML = parser.parseFromString(forecastText, "application/xml");
+        const observationXML = parser.parseFromString(observationText, "application/xml");
+        
+        console.log('Forecast Data:', forecastXML);
+        console.log('Observation Data:', observationXML);
+
+
         // Hakee kaikki <gml:doubleOrNilReasonTupleList> elementit
-        const totalCloudCoverageElements = xmlDoc.getElementsByTagName('gml:doubleOrNilReasonTupleList');
+        const totalCloudCoverageElements = observationXML.getElementsByTagName('gml:doubleOrNilReasonTupleList');
         let weatherData = {};
     
         if (totalCloudCoverageElements.length > 0) {
@@ -33,7 +44,7 @@ export default async function CloudCover() {
             const pressure = cloudCoverageArray[0].split(' ')[0];
             const temperature = cloudCoverageArray[0].split(' ')[2];
             const dewPoint = cloudCoverageArray[0].split(' ')[3];
-            const visibility = cloudCoverageArray[0].split(' ')[19];
+            const visibility = Math.round(cloudCoverageArray[0].split(' ')[19] / 1000);
             const humidity = cloudCoverageArray[0].split(' ')[4];
             const Precipitation = cloudCoverageArray [0].split(' ')[9];
             const Wind = cloudCoverageArray [0].split(' ')[6];
@@ -89,7 +100,7 @@ console.log(OktaValue);
         }
     
         // Hakee <gmlcov:positions> elementit aikaleimojen löytämiseksi
-        const timePositionElements = xmlDoc.getElementsByTagName('gmlcov:positions');
+        const timePositionElements = forecastXML.getElementsByTagName('gmlcov:positions');
         if (timePositionElements.length > 0) {
             const timePosition = timePositionElements[0].textContent.trim();
             const positionsArray = timePosition.split(/\s+/); // Jaa välilyöntien perusteella
