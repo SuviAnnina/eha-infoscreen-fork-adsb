@@ -25,3 +25,10 @@ body {
     text-wrap: balance;
   }
 }
+.scrollable-container {
+  overflow-y: auto;
+  max-height: 100%;
+  padding-right: 1rem;
+}
+ 
+ 

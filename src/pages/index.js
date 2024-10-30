@@ -5,6 +5,7 @@ import Head from 'next/head';
 import CameraServerComponent from '../components/example/ExampleServerComponent';
 import MetarServerComponent from '@/components/metar/MetarServerComponent';
 import RadarServerComponent from '@/components/rainRadar/RadarServerComponent';
+import NotamClientComponent from '@/components/notam/NotamClientComponent';
 
 export default function Home() {
     return (
@@ -60,7 +61,8 @@ export default function Home() {
                         </div>
                     </div>
                     {/* Bottom: One component */}
-                    <div className="bg-gray-700 rounded-lg shadow-lg p-6 h-full w-full">
+                    <div className="bg-gray-700 rounded-lg shadow-lg p-6 h-full w-full scrollable-container">
+                        <NotamClientComponent></NotamClientComponent>
                         {/* Airport Notes here */}
                     </div>
                 </div>
