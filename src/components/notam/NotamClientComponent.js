@@ -78,7 +78,7 @@ export default function NotamClientComponent() {
     }
 
     return (
-        <div>
+        <div style={{ fontSize: '0.75rem' }}>
             <pre>{notam.title}</pre>
             <pre>{notam.content}</pre>
             <p>Last updated: {timeSinceLastUpdate}</p>
