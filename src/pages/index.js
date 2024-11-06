@@ -62,8 +62,8 @@ export default function Home() {
                     </div>
                     {/* Bottom: One component */}
                     <div className="bg-gray-700 rounded-lg shadow-lg p-6 h-full w-full scrollable-container">
-                        <NotamClientComponent></NotamClientComponent>
                         {/* Airport Notes here */}
+                        <NotamClientComponent></NotamClientComponent>
                     </div>
                 </div>
             </div>
