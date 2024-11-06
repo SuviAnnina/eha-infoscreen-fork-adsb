@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import styles from './cloud.module.css';
 
 import CloudCover from "@/pages/cloudcover"
+import CloudCoverOBS from "@/pages/cloudcoverObs"
 
 
 
@@ -9,37 +10,39 @@ import CloudCover from "@/pages/cloudcover"
         // Use the fetched weather data from CloudCover
         const [weatherData, setWeatherData]=useState(null);
         
+        //Observationdata and Forecastdata added together
+        console.log(weatherData)
+
 
         useEffect(() => {
             const fetchData = async () => {
               try {
-                const data = await CloudCover(); // Await the Promise
-                console.log('Fetched weather data:', data); // Log the resolved data
-                
-                
-                // Check if data is a valid object
-                if (data && typeof data === 'object') {
-                    setWeatherData(data); // Update the state with fetched data
-                    
-                    console.log('First Timestamp:', data.firstTimestamp); 
-
+                const observationdata = await CloudCoverOBS(); // Await the Promise
+                const forecastdata = await CloudCover(); // Await the second Promise
+          
+                console.log('Fetched forecast data:', forecastdata);
+                console.log('Fetched observation data:', observationdata);
+          
+               // Tarkistetaan, että forecastdata on olio
+                if (forecastdata && typeof forecastdata === 'object') {
+                  if (observationdata && typeof observationdata === 'object') {
+                    // Yhdistetään observationdata ja forecastdata yhteen objektiin ja päivitetään tila
+                    setWeatherData({ forecast: forecastdata, observation: observationdata });
+                  } else {
+                    console.error('Invalid observation data received:', observationdata);
+                  }
                 } else {
-                  console.error('Invalid data received:', data);
+                  console.error('Invalid forecast data received:', forecastdata);
                 }
+          
               } catch (error) {
                 console.error('Error fetching data:', error); // Handle any errors
               }
             };
-            fetchData(); // Call the async function
-          }, []); // Empty dependency array ensures it only runs once
-        
-          useEffect(() => {
-            if (weatherData) {
-                console.log('Updated weatherData:', weatherData);
-            }
-        }, [weatherData]);
-
-
+          
+            fetchData(); 
+  
+            }, []); // Tyhjä riippuvuuslista varmistaa, että koodi suoritetaan vain kerran
 
 
           // Display loading state while data is being fetched
@@ -47,21 +50,20 @@ import CloudCover from "@/pages/cloudcover"
             return <div>Loading...</div>;
           }
 
-
-      
-
-
-
-
           return (
             <div>
                 <h2>Weather Data</h2>
                 {/* Display the data */}
-                <div>Temperature: {weatherData.temperature} °C</div>
+                <div>Current Temperature: {weatherData.observation.temperatureOBSERVATION} °C</div>
+
+
+
+
+                <div>Temperature: {weatherData.forecast.temperature} °C</div>
                 <div>Humidity: {weatherData.humidity}%</div>
                 <div>Wind Direction: {weatherData.windDirection}</div>
                 <div>Precipitation: {weatherData.Precipitation}MM</div>
-                <div>Cloud Coverage: {weatherData.OktaValue}/8</div>
+                <div>Cloud Coverage: {weatherData.CloudCoverage}/8</div>
                 <div>Dew Point: {weatherData.dewPoint} °C</div>
                 <div>Wind: {weatherData.Wind}M/S</div>
                 <div>Wind Gust: {weatherData.WindGust}M/S</div>

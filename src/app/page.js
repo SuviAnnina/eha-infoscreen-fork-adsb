@@ -2,6 +2,7 @@
 
 
 import CloudCover from "@/pages/cloudcover";
+import CloudCoverOBS from "@/pages/cloudcoverObs"
 import RunwayTemp from "@/components/runwayTemp";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
@@ -35,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     // fetchAdsbData();
-    CloudCover();
+    CloudCoverOBS();
     //fetchCloudCoverData();
    // const intervalADSB = setInterval(fetchAdsbData, 1000);
     // return () => clearInterval(intervalADSB);

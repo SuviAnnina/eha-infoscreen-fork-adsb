@@ -1,4 +1,4 @@
-export default async function CloudCover() {
+export default async function CloudCoverOBS() {
 
 
     const currentTime = new Date().toISOString(); // Saat nykyisen ajan ISO-muodossa
@@ -27,16 +27,14 @@ export default async function CloudCover() {
     
         const [forecastText, observationText] = await Promise.all(responses.map(res => res.text()));
         const parser = new DOMParser();
-        const forecastXML = parser.parseFromString(forecastText, "application/xml");
         const observationXML = parser.parseFromString(observationText, "application/xml");
         
-        console.log('Forecast Data:', forecastXML);
         console.log('Observation Data:', observationXML);
 
 
 
        // Hakee kaikki <gml:doubleOrNilReasonTupleList> elementit
-       const totalCloudCoverageElements = forecastXML.getElementsByTagName('gml:doubleOrNilReasonTupleList');
+       const totalCloudCoverageElements = observationXML.getElementsByTagName('gml:doubleOrNilReasonTupleList');
        let weatherData = {};
    
        if (totalCloudCoverageElements.length > 0) {
@@ -44,76 +42,56 @@ export default async function CloudCover() {
            
            // Jaa rivinvaihtojen mukaan ja ota ensimmäinen arvo
            const cloudCoverageArray = cloudCoverageRaw.split('\n');
-           const CloudCoverage = cloudCoverageArray[0].split(' ')[0]; 
-           const windDirection = cloudCoverageArray[0].split(' ')[1]; 
-           const pressure = cloudCoverageArray[0].split(' ')[2];
-           const temperature = cloudCoverageArray[0].split(' ')[3];
-           const dewPoint = cloudCoverageArray[0].split(' ')[4];
-           const visibility = Math.round(cloudCoverageArray[0].split(' ')[19] / 1000);
-           const humidity = cloudCoverageArray[0].split(' ')[4];
-           const Precipitation = cloudCoverageArray [0].split(' ')[9];
-           const Wind = cloudCoverageArray [0].split(' ')[6];
-           const WindGust = cloudCoverageArray [0].split (' ')[20];
-           
-           let OktaValue;
 
-        if (CloudCoverage == 0) {
-            OktaValue = 0;
-        } else if (CloudCoverage > 0 && CloudCoverage < 18.75) {
-            OktaValue = 1;
-        } else if (CloudCoverage >= 18.75 && CloudCoverage < 31.25) {
-            OktaValue = 2;
-        } else if (CloudCoverage >= 31.25 && CloudCoverage < 43.75) {
-            OktaValue = 3;
-        } else if (CloudCoverage >= 43.75 && CloudCoverage < 56.25) {
-            OktaValue = 4;
-        } else if (CloudCoverage >= 56.25 && CloudCoverage < 68.75) {
-            OktaValue = 5;
-        } else if (CloudCoverage >= 68.75 && CloudCoverage < 81.25) {
-            OktaValue = 6;
-        } else if (CloudCoverage >= 81.25 && CloudCoverage < 100) {
-            OktaValue = 7;
-        } else if (CloudCoverage === 100) {
-            OktaValue = 8;
-        } else {
-            OktaValue = 9;  // For sky obscured
-        }
-        console.log(OktaValue);
-
-            
-            
+           // Halutaan listan viimeisimmät 13 arvoa, eli uusimmat havainnot:
+           const lastObservation = cloudCoverageArray[cloudCoverageArray.length - 1].trim().split(' ');
 
 
+           const temperatureOBSERVATION = lastObservation[0];
+           const WindOBSERVATION = lastObservation [1]
+           const WindGustOBSERVATION = lastObservation [2]
+           const windDirectionOBSERVATION = lastObservation[3]
+           const humidityOBSERVATION = lastObservation[4]
+           const dewPointOBSERVATION = lastObservation[5]
+           //const oneHourPrecipitationOBSERVATION = lastObservation[6]  //Sademäärä edellisen tunnin aikana
+           const tenMinPrecipitationOBSERVATION = lastObservation[7]  //Sademäärä viimeisen 10Minuutin aikana
+           const snow_awsOBSERVATION = lastObservation[8]  //Lumen syvyys (CM)
+           const p_seaOBSERVATION = lastObservation[9]  //Merenpinnan paine
+           const visibilityOBSERVATION = Math.round(lastObservation[10] / 1000); //Näkyvyys metreinä
+           const CloudCoverageOBSERVATION = lastObservation[11]; //(?/8)
+           const wawaOBSERVATION = lastObservation[12]; //Nykyinen sääilmiö           
             
             // Assign weather data into the object
             weatherData = {
-                CloudCoverage,
-                windDirection,
-                pressure,
-                temperature,
-                dewPoint,
-                visibility,
-                humidity,
-                Precipitation,
-                Wind,
-                WindGust,
-                OktaValue,
+                temperatureOBSERVATION,
+                WindOBSERVATION,
+                WindGustOBSERVATION,
+                windDirectionOBSERVATION,
+                humidityOBSERVATION,
+                dewPointOBSERVATION,
+                //oneHourPrecipitationOBSERVATION,
+                tenMinPrecipitationOBSERVATION,
+                snow_awsOBSERVATION,
+                p_seaOBSERVATION,
+                visibilityOBSERVATION, 
+                CloudCoverageOBSERVATION,
+                wawaOBSERVATION,
             };
         } else {
             console.warn('Pilvisyysarvoja ei löytynyt.');
         }
     
         // Hakee <gmlcov:positions> elementit aikaleimojen löytämiseksi
-        const timePositionElements = forecastXML.getElementsByTagName('gmlcov:positions');
+        const timePositionElements = observationXML.getElementsByTagName('gmlcov:positions');
         if (timePositionElements.length > 0) {
             const timePosition = timePositionElements[0].textContent.trim();
             const positionsArray = timePosition.split(/\s+/); // Jaa välilyöntien perusteella
             if (positionsArray.length >= 3) {
-                const firstTimestamp = positionsArray[2]; // Ota ensimmäinen aikaleima (kolmas arvo)
-                console.log('First Timestamp:', firstTimestamp);
+                const latestTimestamp = positionsArray[positionsArray.length - 1] // Ota viimeinen aikaleima (listan viimeinen arvo)
+                console.log('Timestamp:', latestTimestamp);
                 
                 // Include the timestamp in the weatherData object
-                weatherData.firstTimestamp = firstTimestamp;
+                weatherData.latestTimestamp = latestTimestamp;
             } else {
                 console.log('Aikaleima ei löytynyt.');
             }
