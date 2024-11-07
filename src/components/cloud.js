@@ -14,7 +14,6 @@ import CloudCoverOBS from "@/pages/cloudcoverObs"
         console.log(weatherData)
 
 
-        useEffect(() => {
             const fetchData = async () => {
               try {
                 const observationdata = await CloudCoverOBS(); // Await the Promise
@@ -40,10 +39,19 @@ import CloudCoverOBS from "@/pages/cloudcoverObs"
               }
             };
           
-            fetchData(); 
-  
-            }, []); // Tyhjä riippuvuuslista varmistaa, että koodi suoritetaan vain kerran
-
+            useEffect(() => {
+              fetchData(); // Fetch data initially once
+      
+              // Set interval to refetch observation data every 10 minutes (600000 ms)
+              const intervalId = setInterval(() => {
+                  fetchData();
+              }, 600000); // 10 minutes in milliseconds
+      
+              // Clear the interval when component unmounts
+              return () => clearInterval(intervalId);
+      
+          }, []); // Empty dependency array ensures the effect runs only once at mount
+      
 
           // Display loading state while data is being fetched
           if (!weatherData) {
@@ -51,7 +59,7 @@ import CloudCoverOBS from "@/pages/cloudcoverObs"
           }
 
           return (
-            <div>
+            <div className={styles.box}>
                 <h2>Weather Data</h2>
                 {/* Display the data */}
                 <div>Current Temperature: {weatherData.observation.temperatureOBSERVATION} °C</div>

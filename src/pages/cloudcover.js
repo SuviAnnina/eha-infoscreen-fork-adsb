@@ -1,10 +1,11 @@
 export default async function CloudCover() {
 
+    const currentTime = new Date(); // Alustetaan nykyinen aika Date-objektina
+    const endTime = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000); // Lisätään 2 tuntia millisekunteina
 
-    const currentTime = new Date().toISOString(); // Saat nykyisen ajan ISO-muodossa
-    console.log('CURRENTIME, HUOMAA LISÄÄ +3H, niin ollaan suomen ajassa ' + currentTime)
+    console.log("Currentime:" + currentTime.toISOString(), "Endtime" + endTime.toISOString())
 
-    const urls = [`https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::multipointcoverage&place=pyhtää`,
+    const urls = [`https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::multipointcoverage&place=pyhtää&starttime=${currentTime.toISOString()}&endtime=${endTime.toISOString()}`,
                  `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&place=pyhtää`
     ];
 
