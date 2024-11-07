@@ -1,12 +1,16 @@
 export default async function CloudCoverOBS() {
 
+    const currentTime = new Date(); // Alustetaan nykyinen aika Date-objektina
+    const oneHourAgo = new Date(currentTime.getTime() - 1 * 60 * 60 * 1000); // Tallennetaan aikaleima 1h sitten
 
-    const currentTime = new Date().toISOString(); // Saat nykyisen ajan ISO-muodossa
-    //console.log('CURRENTIME, HUOMAA LISÄÄ +3H, niin ollaan suomen ajassa ' + currentTime)
+
 
     const urls = [`https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::multipointcoverage&place=pyhtää`,
-                 `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&place=pyhtää`
+                 `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&place=pyhtää&starttime=${oneHourAgo.toISOString()}`
     ];
+
+    //Nyt ensimmäinen aikaleima on tasan 1h sitten, ja viimeinen on nykyhetki
+
 
     try {
         // Fetch both URLs concurrently

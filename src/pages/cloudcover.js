@@ -44,6 +44,7 @@ export default async function CloudCover() {
            const cloudCoverageRaw = totalCloudCoverageElements[0].textContent.trim();
            
            // Jaa rivinvaihtojen mukaan ja ota ensimmäinen arvo
+           //EI OIKEASSA JÄRJESTYKSESSÄ VIELÄ, KORJAA!!
            const cloudCoverageArray = cloudCoverageRaw.split('\n');
            const CloudCoverage = cloudCoverageArray[0].split(' ')[0]; 
            const windDirection = cloudCoverageArray[0].split(' ')[1]; 
