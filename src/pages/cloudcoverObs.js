@@ -9,6 +9,9 @@ export default async function CloudCoverOBS() {
                  `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&place=pyhtää&starttime=${oneHourAgo.toISOString()}`
     ];
 
+
+    console.log('ObservationURL:',urls[1]);
+
     //Nyt ensimmäinen aikaleima on tasan 1h sitten, ja viimeinen on nykyhetki
 
 
@@ -33,7 +36,7 @@ export default async function CloudCoverOBS() {
         const parser = new DOMParser();
         const observationXML = parser.parseFromString(observationText, "application/xml");
         
-        console.log('Observation Data:', observationXML);
+        //console.log('Observation Data:', observationXML);
 
 
 
@@ -92,10 +95,16 @@ export default async function CloudCoverOBS() {
             const positionsArray = timePosition.split(/\s+/); // Jaa välilyöntien perusteella
             if (positionsArray.length >= 3) {
                 const latestTimestamp = positionsArray[positionsArray.length - 1] // Ota viimeinen aikaleima (listan viimeinen arvo)
-                console.log('Timestamp:', latestTimestamp);
-                
+                //console.log('Timestamp:', latestTimestamp);
+
+                // Muunna aikaleima millisekunteihin ja luo uusi Date-objekti
+                const date = new Date(latestTimestamp * 1000);
+
+                // Aseta Suomen aikavyöhyke käyttäen toLocaleString-funktiota
+                const suomiAika = date.toLocaleString("fi-FI", { timeZone: "Europe/Helsinki" });
                 // Include the timestamp in the weatherData object
-                weatherData.latestTimestamp = latestTimestamp;
+                weatherData.suomiAika = suomiAika;
+
             } else {
                 console.log('Aikaleima ei löytynyt.');
             }

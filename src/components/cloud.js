@@ -3,6 +3,7 @@ import styles from './cloud.module.css';
 
 import CloudCover from "@/pages/cloudcover"
 import CloudCoverOBS from "@/pages/cloudcoverObs"
+import Image from 'next/image';
 
 
 
@@ -45,7 +46,7 @@ import CloudCoverOBS from "@/pages/cloudcoverObs"
               // Set interval to refetch observation data every 10 minutes (600000 ms)
               const intervalId = setInterval(() => {
                   fetchData();
-              }, 600000); // 10 minutes in milliseconds
+              }, 60000); // 1 minutes in milliseconds
       
               // Clear the interval when component unmounts
               return () => clearInterval(intervalId);
@@ -60,25 +61,41 @@ import CloudCoverOBS from "@/pages/cloudcoverObs"
 
           return (
             <div className={styles.box}>
-                <h2>Weather Data</h2>
-                {/* Display the data */}
-                <div>Current Temperature: {weatherData.observation.temperatureOBSERVATION} °C</div>
-
-
-
-
-                <div>Temperature: {weatherData.forecast.temperature} °C</div>
-                <div>Humidity: {weatherData.humidity}%</div>
-                <div>Wind Direction: {weatherData.windDirection}</div>
-                <div>Precipitation: {weatherData.Precipitation}MM</div>
-                <div>Cloud Coverage: {weatherData.CloudCoverage}/8</div>
-                <div>Dew Point: {weatherData.dewPoint} °C</div>
-                <div>Wind: {weatherData.Wind}M/S</div>
-                <div>Wind Gust: {weatherData.WindGust}M/S</div>
-                <div>Visibility: {weatherData.visibility}KM</div>
-                <div>Pressure: {weatherData.pressure}HPR</div>
-                <div>First Timestamp: {weatherData.firstTimestamp}</div> {/* Displaying timestamp */}
+              <div>{weatherData.observation.suomiAika}</div>
+              <div className={styles.imgcontainer}>
+                  <Image src="/images/sun.svg" alt="Sun Icon" width={100} height={100} />
+              </div>
+            <div className={styles.infocontainer}>
+             
+            <div className={styles.left}>
+              <div>Temp:</div>
+              <div>Humidity:</div>
+              <div>Wind direction:</div>
+              <div>Precipitation:</div>
+              <div>Cloud cover:</div>
+              <div>Dewpoint:</div>
+              <div>Wind:</div>
+              <div>Wind gust:</div>
+              <div>Visibility:</div>
+              <div>Pressure:</div>
             </div>
+             
+            <div className={styles.right}>
+              <div>{weatherData.observation.temperatureOBSERVATION} °C</div>
+              <div>{weatherData.observation.humidityOBSERVATION} %</div>
+              <div>{weatherData.observation.windDirectionOBSERVATION}°</div>
+              <div>{weatherData.observation.tenMinPrecipitationOBSERVATION} MM</div>
+              <div>{weatherData.observation.CloudCoverageOBSERVATION}</div>
+              <div>{weatherData.observation.dewPointOBSERVATION} °C</div>
+              <div>{weatherData.observation.WindOBSERVATION} M/S</div>
+              <div>{weatherData.observation.WindGustOBSERVATION} M/S</div>
+              <div>{weatherData.observation.visibilityOBSERVATION} KM</div>
+              <div>{weatherData.observation.p_seaOBSERVATION} HPR</div>
+
+            </div>
+            </div>
+            </div>
+            //KUVAT TOIMIVAT public kansiossa
         );
     };
     

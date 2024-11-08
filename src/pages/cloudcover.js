@@ -3,11 +3,13 @@ export default async function CloudCover() {
     const currentTime = new Date(); // Alustetaan nykyinen aika Date-objektina
     const endTime = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000); // Lisätään 2 tuntia millisekunteina
 
-    console.log("Currentime:" + currentTime.toISOString(), "Endtime" + endTime.toISOString())
+    //console.log("Currentime:" + currentTime.toISOString(), "Endtime" + endTime.toISOString())
 
     const urls = [`https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::multipointcoverage&place=pyhtää&starttime=${currentTime.toISOString()}&endtime=${endTime.toISOString()}`,
                  `https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage&place=pyhtää`
     ];
+
+    console.log('ForecastURL:',urls[0]);
 
     try {
         // Fetch both URLs concurrently
@@ -31,8 +33,7 @@ export default async function CloudCover() {
         const forecastXML = parser.parseFromString(forecastText, "application/xml");
         const observationXML = parser.parseFromString(observationText, "application/xml");
         
-        console.log('Forecast Data:', forecastXML);
-        console.log('Observation Data:', observationXML);
+        //console.log('Forecast Data:', forecastXML);
 
 
 
@@ -44,6 +45,7 @@ export default async function CloudCover() {
            const cloudCoverageRaw = totalCloudCoverageElements[0].textContent.trim();
            
            // Jaa rivinvaihtojen mukaan ja ota ensimmäinen arvo
+           //Ensimmäinen arvo on seuraavan tasatunnin ennuste.
            //EI OIKEASSA JÄRJESTYKSESSÄ VIELÄ, KORJAA!!
            const cloudCoverageArray = cloudCoverageRaw.split('\n');
            const CloudCoverage = cloudCoverageArray[0].split(' ')[0]; 
@@ -80,7 +82,7 @@ export default async function CloudCover() {
         } else {
             OktaValue = 9;  // For sky obscured
         }
-        console.log(OktaValue);
+        //console.log(OktaValue);
 
             
             
@@ -112,7 +114,7 @@ export default async function CloudCover() {
             const positionsArray = timePosition.split(/\s+/); // Jaa välilyöntien perusteella
             if (positionsArray.length >= 3) {
                 const firstTimestamp = positionsArray[2]; // Ota ensimmäinen aikaleima (kolmas arvo)
-                console.log('First Timestamp:', firstTimestamp);
+                //console.log('First Timestamp:', firstTimestamp);
                 
                 // Include the timestamp in the weatherData object
                 weatherData.firstTimestamp = firstTimestamp;
