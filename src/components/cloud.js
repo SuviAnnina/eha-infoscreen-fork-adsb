@@ -85,7 +85,7 @@ import Image from 'next/image';
               <div>{weatherData.observation.humidityOBSERVATION} %</div>
               <div>{weatherData.observation.windDirectionOBSERVATION}°</div>
               <div>{weatherData.observation.tenMinPrecipitationOBSERVATION} MM</div>
-              <div>{weatherData.observation.CloudCoverageOBSERVATION}</div>
+              <div>{weatherData.observation.CloudCoverageOBSERVATION}/8</div>
               <div>{weatherData.observation.dewPointOBSERVATION} °C</div>
               <div>{weatherData.observation.WindOBSERVATION} M/S</div>
               <div>{weatherData.observation.WindGustOBSERVATION} M/S</div>
