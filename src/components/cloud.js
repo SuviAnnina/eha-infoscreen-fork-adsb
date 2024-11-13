@@ -61,7 +61,7 @@ import Image from 'next/image';
 
           return (
             <div className={styles.box}>
-              <div>{weatherData.observation.suomiAika}</div>
+              {/* <div>{weatherData.observation.suomiAika}</div> */}
               <div className={styles.imgcontainer}>
                   <Image src="/images/sun.svg" alt="Sun Icon" width={100} height={100} />
               </div>
