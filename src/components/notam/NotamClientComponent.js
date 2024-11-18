@@ -1,7 +1,6 @@
-// src/components/notam/NotamClientComponent.js
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export default function NotamClientComponent() {
     const [notam, setNotam] = useState(null);
@@ -10,7 +9,7 @@ export default function NotamClientComponent() {
     const [timeSinceLastUpdate, setTimeSinceLastUpdate] = useState('');
 
     // Function to retrieve NOTAM data
-    async function fetchNotam() {
+    const fetchNotam = useCallback(async () => {
         try {
             const response = await fetch('/api/notams', {
                 method: 'GET',
@@ -31,10 +30,10 @@ export default function NotamClientComponent() {
         } catch (error) {
             setError('Error loading NOTAM data');
         }
-    }
+    }, []);
 
     // Update the "Last updated" time text
-    const updateTimeSinceLastUpdate = () => {
+    const updateTimeSinceLastUpdate = useCallback(() => {
         if (lastUpdated) {
             const now = new Date();
             const diff = Math.floor((now - lastUpdated) / 1000); // Difference in seconds
@@ -42,7 +41,7 @@ export default function NotamClientComponent() {
             const hours = Math.floor(minutes / 60);
 
             if (hours >= 1) {
-                // When the full hour is reached, lastUpdated is updated and the couter is reset
+                // When the full hour is reached, lastUpdated is updated and the counter is reset
                 fetchNotam();
             } else if (minutes >= 1) {
                 // Display the number of minutes
@@ -54,20 +53,20 @@ export default function NotamClientComponent() {
         } else {
             setTimeSinceLastUpdate('Not updated');
         }
-    };
+    }, [fetchNotam, lastUpdated]);
 
     // Retrieve NOTAM data for the first time and set the update interval every hour
     useEffect(() => {
         fetchNotam();
         const intervalId = setInterval(fetchNotam, 3600000); // Data updated every hour
         return () => clearInterval(intervalId);
-    }, []);
+    }, [fetchNotam]);
 
     // Updates the "Last updated" time every second
     useEffect(() => {
         const intervalId = setInterval(updateTimeSinceLastUpdate, 1000);
         return () => clearInterval(intervalId);
-    }, [lastUpdated]);
+    }, [updateTimeSinceLastUpdate]);
 
     if (error) {
         return <div>{error}</div>;

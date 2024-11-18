@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import isEqual from 'lodash.isequal';
@@ -21,9 +22,9 @@ async function saveMetarReport(reportData) {
 
         if (!response.ok)
             throw new Error(result.error || 'Error saving report');
-        console.log('METAR report saved:', result.message);
+        //console.log('METAR report saved:', result.message);
     } catch (error) {
-        console.error('Failed to save METAR report:', error);
+        //console.error('Failed to save METAR report:', error);
     }
 }
 
@@ -53,7 +54,7 @@ export default function MetarServerComponent() {
                 );
                 setReportsOneHourAgo(reportsData.results_1_hour_ago || []);
             } catch (error) {
-                console.error('Error fetching reports:', error);
+                //console.error('Error fetching reports:', error);
             }
         }
 
@@ -75,9 +76,9 @@ export default function MetarServerComponent() {
                     throw new Error('Failed to delete reports');
                 }
 
-                console.log('Old reports deleted successfully');
+                //console.log('Old reports deleted successfully');
             } catch (error) {
-                console.error('Failed to delete reports:', error);
+                //console.error('Failed to delete reports:', error);
             }
         }
 
@@ -265,16 +266,16 @@ export default function MetarServerComponent() {
             ? visibility > 10000
                 ? '9999'
                 : visibility >= 5000
-                  ? String(Math.round(visibility / 1000) * 1000).padStart(
+                    ? String(Math.round(visibility / 1000) * 1000).padStart(
                         4,
                         '0'
                     )
-                  : visibility >= 800
-                    ? String(Math.round(visibility / 100) * 100).padStart(
-                          4,
-                          '0'
-                      )
-                    : String(Math.round(visibility / 50) * 50).padStart(4, '0')
+                    : visibility >= 800
+                        ? String(Math.round(visibility / 100) * 100).padStart(
+                            4,
+                            '0'
+                        )
+                        : String(Math.round(visibility / 50) * 50).padStart(4, '0')
             : '////';
 
     const pressureValue =
@@ -400,13 +401,13 @@ export default function MetarServerComponent() {
     const temp =
         temperature !== null
             ? (temperature < 0 ? 'M' : '') +
-              String(Math.abs(Math.round(temperature))).padStart(2, '0')
+            String(Math.abs(Math.round(temperature))).padStart(2, '0')
             : '///';
 
     const dew =
         dewpoint !== null
             ? (dewpoint < 0 ? 'M' : '') +
-              String(Math.abs(Math.round(dewpoint))).padStart(2, '0')
+            String(Math.abs(Math.round(dewpoint))).padStart(2, '0')
             : '/';
 
     const windDir =

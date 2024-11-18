@@ -51,21 +51,40 @@ export default function RunwayClientComponent({ data }) {
                     className={styles.airstripImage}
                 />
                 <div className={styles.temperatureContainer}>
-                    {['52280', '52437', '52281'].map(siteId => {
+                    {['52280', '52437', '52281'].map((siteId) => {
                         const station = getStationBySiteId(siteId);
                         const temperature = getTemperatureBySiteId(siteId);
                         const condition = station?.condition;
-                        const colorAndExplanation = getColorAndExplanationByCondition(condition);
+                        const colorAndExplanation =
+                            getColorAndExplanationByCondition(condition);
 
-                        if (!station || temperature === undefined || !colorAndExplanation) {
+                        if (
+                            !station ||
+                            temperature === undefined ||
+                            !colorAndExplanation
+                        ) {
                             return null;
                         }
 
                         return (
-                            <div key={siteId} className={styles.temperatureValue}>
-                                <span style={{fontWeight: 'bold'}}>{station.name}</span>
-                                <span style={{fontSize: 14, fontWeight: 'bold'}}>{temperature}</span>
-                                <span style={{ color: colorAndExplanation.color, fontWeight: 'bold' }}>
+                            <div
+                                key={siteId}
+                                className={styles.temperatureValue}
+                            >
+                                <span style={{ fontWeight: 'bold' }}>
+                                    {station.name}
+                                </span>
+                                <span
+                                    style={{ fontSize: 14, fontWeight: 'bold' }}
+                                >
+                                    {temperature}
+                                </span>
+                                <span
+                                    style={{
+                                        color: colorAndExplanation.color,
+                                        fontWeight: 'bold',
+                                    }}
+                                >
                                     {colorAndExplanation.explanation}
                                 </span>
                             </div>
